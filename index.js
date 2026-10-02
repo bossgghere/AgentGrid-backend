@@ -69,6 +69,22 @@ async function main() {
       continue;
     }
 
+    if (cmd === "history") {
+      const sessions = memory.sessions || [];
+      if (sessions.length === 0) {
+        console.log(chalk.dim("\n  No sessions yet.\n"));
+      } else {
+        console.log(chalk.dim(`\n  Last ${Math.min(sessions.length, 10)} sessions:`));
+        sessions.slice(-10).reverse().forEach((s, i) => {
+          const ts = new Date(s.timestamp).toLocaleString();
+          const status = s.status === "done" ? chalk.green("✓") : chalk.yellow("~");
+          console.log(chalk.dim(`  ${status} [${ts}]  ${s.task}`));
+        });
+        console.log();
+      }
+      continue;
+    }
+
     const spinner = ora({
       text: chalk.dim("  Agents running..."),
       color: "magenta",
