@@ -15,6 +15,14 @@ function ask(question) {
   return new Promise((resolve) => rl.question(question, resolve));
 }
 
+if (process.argv.includes("--version")) {
+  const { createRequire } = await import("module");
+  const require = createRequire(import.meta.url);
+  const pkg = require("./package.json");
+  console.log(`AgentGrid v${pkg.version}`);
+  process.exit(0);
+}
+
 process.on("SIGINT", () => {
   console.log(chalk.dim("\n\n  Interrupted. Goodbye.\n"));
   process.exit(0);
