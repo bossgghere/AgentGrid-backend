@@ -54,6 +54,8 @@ async function main() {
   console.log(chalk.dim("  Agents   : Orchestrator → Planner → Coder → Reviewer"));
   console.log(chalk.dim("  Type a coding task. 'exit' to quit.\n"));
 
+  let taskCount = 0;
+
   const rawDir = await ask(chalk.cyan("  Working directory (Enter = current): "));
   const workingDir = rawDir.trim() || process.cwd();
 
@@ -65,8 +67,9 @@ async function main() {
   console.log(chalk.dim(`  Dir: ${workingDir}\n`));
 
   while (true) {
-    const task = await ask(chalk.bold.hex("#818CF8")("  ▶ Task: "));
+    const task = await ask(chalk.bold.hex("#818CF8")(`  ▶ Task #${taskCount + 1}: `));
 
+    taskCount++;
     const cmd = task.toLowerCase().trim();
     if (cmd === "exit") break;
     if (!task.trim()) continue;
