@@ -5,7 +5,20 @@ import { plannerNode } from "./agents/planner.js";
 import { coderNode } from "./agents/coder.js";
 import { reviewerNode } from "./agents/reviewer.js";
 
-// State shared across all agents
+/**
+ * Shared state passed between all agents in the graph.
+ *
+ * @property task            - Raw user task string
+ * @property plan            - Ordered step list from Planner
+ * @property code            - Concatenated code written by Coder
+ * @property executionResult - Stdout/results from all Coder actions
+ * @property review          - Reviewer feedback (if needs_revision)
+ * @property output          - Final user-facing summary
+ * @property status          - "planning" | "done" | "needs_revision"
+ * @property iterations      - Number of Coder→Reviewer loops so far
+ * @property workingDir      - Filesystem root for all file operations
+ * @property memory          - Persistent memory loaded from store.js
+ */
 export const AgentState = Annotation.Root({
   task:            Annotation({ reducer: (x, y) => y ?? x, default: () => "" }),
   plan:            Annotation({ reducer: (x, y) => y ?? x, default: () => "" }),
