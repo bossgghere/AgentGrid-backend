@@ -56,8 +56,18 @@ async function main() {
   while (true) {
     const task = await ask(chalk.bold.hex("#818CF8")("  ▶ Task: "));
 
-    if (task.toLowerCase().trim() === "exit") break;
+    const cmd = task.toLowerCase().trim();
+    if (cmd === "exit") break;
     if (!task.trim()) continue;
+
+    if (cmd === "help") {
+      console.log(chalk.dim("\n  Commands:"));
+      console.log(chalk.dim("    help     — show this message"));
+      console.log(chalk.dim("    history  — view past sessions"));
+      console.log(chalk.dim("    config   — show active provider & settings"));
+      console.log(chalk.dim("    exit     — quit AgentGrid\n"));
+      continue;
+    }
 
     const spinner = ora({
       text: chalk.dim("  Agents running..."),
