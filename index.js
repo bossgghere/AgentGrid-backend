@@ -69,6 +69,15 @@ async function main() {
       continue;
     }
 
+    if (cmd === "config") {
+      console.log(chalk.dim("\n  Active config:"));
+      console.log(chalk.dim(`    Provider  : `) + chalk.hex("#6366F1")(provider.info.name));
+      console.log(chalk.dim(`    Model     : `) + chalk.hex("#818CF8")(provider.info.model));
+      console.log(chalk.dim(`    Dir       : ${workingDir}`));
+      console.log(chalk.dim(`    Max iters : ${process.env.MAX_ITERATIONS || 3}\n`));
+      continue;
+    }
+
     if (cmd === "history") {
       const sessions = memory.sessions || [];
       if (sessions.length === 0) {
