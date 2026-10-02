@@ -46,6 +46,11 @@ async function main() {
   const memory = loadMemory();
   const graph = buildGraph();
 
+  const sessionCount = (memory.sessions || []).length;
+  if (sessionCount > 0) {
+    console.log(chalk.dim(`  Sessions : ${sessionCount} past session${sessionCount !== 1 ? "s" : ""} in memory`));
+  }
+
   console.log(chalk.dim("  Agents   : Orchestrator → Planner → Coder → Reviewer"));
   console.log(chalk.dim("  Type a coding task. 'exit' to quit.\n"));
 
