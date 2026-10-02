@@ -2,7 +2,8 @@ import chalk from "chalk";
 import { getProvider } from "../providers/index.js";
 
 export async function reviewerNode(state) {
-  console.log(chalk.hex("#f59e0b")("\n  [Reviewer] Checking output..."));
+  const maxIter = parseInt(process.env.MAX_ITERATIONS || "3", 10);
+  console.log(chalk.hex("#f59e0b")(`\n  [Reviewer] Checking output (iteration ${state.iterations}/${maxIter})...`));
 
   const provider = await getProvider();
 
