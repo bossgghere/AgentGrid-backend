@@ -15,6 +15,12 @@ function ask(question) {
   return new Promise((resolve) => rl.question(question, resolve));
 }
 
+const NODE_MAJOR = parseInt(process.versions.node.split(".")[0], 10);
+if (NODE_MAJOR < 18) {
+  console.error(`AgentGrid requires Node.js 18+. You have ${process.versions.node}.`);
+  process.exit(1);
+}
+
 if (process.argv.includes("--version")) {
   const { createRequire } = await import("module");
   const require = createRequire(import.meta.url);
