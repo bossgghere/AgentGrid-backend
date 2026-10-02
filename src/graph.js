@@ -20,9 +20,11 @@ export const AgentState = Annotation.Root({
 });
 
 // After reviewer: loop back to coder or finish
+const MAX_ITERATIONS = parseInt(process.env.MAX_ITERATIONS || "3", 10);
+
 function shouldContinue(state) {
   if (state.status === "done") return END;
-  if (state.iterations >= 3) return END;   // circuit breaker
+  if (state.iterations >= MAX_ITERATIONS) return END;   // circuit breaker
   return "coder";
 }
 
