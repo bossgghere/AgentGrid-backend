@@ -49,11 +49,12 @@ Rules:
       .replace(/\n?```$/, "")
       .trim();
     actions = JSON.parse(cleaned);
-  } catch {
-    console.log(chalk.red("  ✗ Could not parse action JSON, treating as raw output"));
+  } catch (parseErr) {
+    console.log(chalk.red("  ✗ Could not parse action JSON — model returned non-JSON output"));
+    console.log(chalk.dim(`    Hint: raw response starts with: ${raw.slice(0, 120)}`));
     return {
       code: raw,
-      executionResult: "Parse error — raw output: " + raw.slice(0, 500),
+      executionResult: `Parse error (${parseErr.message}). Raw: ${raw.slice(0, 500)}`,
       iterations: state.iterations + 1,
     };
   }
