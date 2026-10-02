@@ -15,6 +15,11 @@ function ask(question) {
   return new Promise((resolve) => rl.question(question, resolve));
 }
 
+process.on("SIGINT", () => {
+  console.log(chalk.dim("\n\n  Interrupted. Goodbye.\n"));
+  process.exit(0);
+});
+
 async function main() {
   console.log();
   console.log(chalk.bold.hex("#6366F1")("  ╔══════════════════════════════╗"));
