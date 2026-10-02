@@ -110,6 +110,8 @@ async function main() {
       color: "magenta",
     }).start();
 
+    const startTime = Date.now();
+
     try {
       const result = await graph.invoke({
         task: task.trim(),
@@ -141,7 +143,8 @@ async function main() {
       });
       saveMemory(memory);
 
-      console.log(chalk.dim("\n  ─────────────────────────────────\n"));
+      const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+      console.log(chalk.dim(`\n  Completed in ${elapsed}s  ─────────────────────────\n`));
     } catch (err) {
       spinner.stop();
       console.log(chalk.red(`\n  ✗ Error: ${err.message}\n`));
