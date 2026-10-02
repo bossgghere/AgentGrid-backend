@@ -1,17 +1,13 @@
-import Anthropic from "@anthropic-ai/sdk";
 import chalk from "chalk";
-
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+import { getProvider } from "../providers/index.js";
 
 export async function reviewerNode(state) {
   console.log(chalk.hex("#f59e0b")("\n  [Reviewer] Checking output..."));
 
-  const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 1024,
-    messages: [{
-      role: "user",
-      content: `You are a reviewer agent inside AgentGrid. Determine if the coding task was completed correctly.
+  const provider = await getProvider();
+
+  const raw = await provider.complete(
+    `You are a reviewer agent inside AgentGrid. Determine if the coding task was completed correctly.
 
 Original Task: ${state.task}
 Plan:
@@ -27,14 +23,13 @@ Respond with this exact JSON (no markdown):
   "feedback": "one sentence — what's missing or wrong (only if needs_revision)",
   "output": "user-facing summary of what was accomplished"
 }`,
-    }],
-  });
+    1024
+  );
 
   let result;
-  const raw = response.content[0].text.trim();
-
   try {
     const cleaned = raw
+      .trim()
       .replace(/^```json\n?/i, "")
       .replace(/^```\n?/, "")
       .replace(/\n?```$/, "")

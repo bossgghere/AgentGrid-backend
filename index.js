@@ -4,6 +4,7 @@ import chalk from "chalk";
 import ora from "ora";
 import { buildGraph } from "./src/graph.js";
 import { loadMemory, saveMemory } from "./src/memory/store.js";
+import { getProvider, PROVIDER } from "./src/providers/index.js";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -22,16 +23,30 @@ async function main() {
   console.log(chalk.bold.hex("#6366F1")("  ╚══════════════════════════════╝"));
   console.log();
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.log(chalk.red("  ✗ ANTHROPIC_API_KEY not set."));
+  // Validate the right key is set for the chosen provider
+  const keyMap = {
+    anthropic: "ANTHROPIC_API_KEY",
+    openai: "OPENAI_API_KEY",
+    gemini: "GEMINI_API_KEY",
+  };
+  const requiredKey = keyMap[PROVIDER];
+  if (!requiredKey || !process.env[requiredKey]) {
+    console.log(chalk.red(`  ✗ ${requiredKey} not set for provider "${PROVIDER}".`));
     console.log(chalk.dim("    Copy .env.example → .env and add your key.\n"));
     process.exit(1);
   }
 
+  // Warm up provider (lazy load)
+  const provider = await getProvider();
+  console.log(
+    chalk.dim(`  Provider : `) + chalk.hex("#6366F1")(`${provider.info.name}`) +
+    chalk.dim(`  Model : `) + chalk.hex("#818CF8")(provider.info.model)
+  );
+
   const memory = loadMemory();
   const graph = buildGraph();
 
-  console.log(chalk.dim("  Agents: Orchestrator → Planner → Coder → Reviewer"));
+  console.log(chalk.dim("  Agents   : Orchestrator → Planner → Coder → Reviewer"));
   console.log(chalk.dim("  Type a coding task. 'exit' to quit.\n"));
 
   const rawDir = await ask(chalk.cyan("  Working directory (Enter = current): "));

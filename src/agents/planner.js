@@ -1,17 +1,13 @@
-import Anthropic from "@anthropic-ai/sdk";
 import chalk from "chalk";
-
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+import { getProvider } from "../providers/index.js";
 
 export async function plannerNode(state) {
   console.log(chalk.hex("#818CF8")("\n  [Planner] Breaking task into steps..."));
 
-  const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 1024,
-    messages: [{
-      role: "user",
-      content: `You are a software planning agent inside AgentGrid.
+  const provider = await getProvider();
+
+  const text = await provider.complete(
+    `You are a software planning agent inside AgentGrid.
 
 Break this coding task into clear, executable steps for a coder agent.
 
@@ -25,11 +21,9 @@ Rules:
 - Be concise — one line per step
 
 Return a numbered list only. No explanation.`,
-    }],
-  });
+    1024
+  );
 
-  const plan = response.content[0].text;
-  console.log(chalk.dim("\n" + plan.split("\n").map((l) => `  ${l}`).join("\n")));
-
-  return { plan };
+  console.log(chalk.dim("\n" + text.split("\n").map((l) => `  ${l}`).join("\n")));
+  return { plan: text };
 }

@@ -1,14 +1,14 @@
-import Anthropic from "@anthropic-ai/sdk";
 import chalk from "chalk";
+import { getProvider } from "../providers/index.js";
 import { runShell } from "../tools/shell.js";
 import { readFile, writeFile, listDir } from "../tools/file.js";
-
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function coderNode(state) {
   console.log(
     chalk.hex("#22c55e")(`\n  [Coder] Executing (iteration ${state.iterations + 1}/3)...`)
   );
+
+  const provider = await getProvider();
 
   const prompt = `You are a coder agent inside AgentGrid. Execute the plan by generating a sequence of actions.
 
@@ -38,17 +38,12 @@ Rules:
 - Run commands needed to make the code work (npm install, etc.)
 - Return ONLY a valid JSON array. No markdown, no explanation.`;
 
-  const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 8096,
-    messages: [{ role: "user", content: prompt }],
-  });
+  const raw = await provider.complete(prompt, 8096);
 
   let actions;
-  const raw = response.content[0].text.trim();
-
   try {
     const cleaned = raw
+      .trim()
       .replace(/^```json\n?/i, "")
       .replace(/^```\n?/, "")
       .replace(/\n?```$/, "")
