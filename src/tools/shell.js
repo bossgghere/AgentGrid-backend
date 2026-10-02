@@ -1,11 +1,13 @@
 import { execSync } from "child_process";
 
+const SHELL_TIMEOUT = parseInt(process.env.SHELL_TIMEOUT || "30000", 10);
+
 export function runShell(command, cwd = process.cwd()) {
   try {
     const output = execSync(command, {
       cwd,
       encoding: "utf-8",
-      timeout: 30000,
+      timeout: SHELL_TIMEOUT,
       stdio: ["pipe", "pipe", "pipe"],
     });
     return output || "(no output)";
