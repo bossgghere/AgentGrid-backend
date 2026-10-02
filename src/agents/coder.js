@@ -59,6 +59,8 @@ Rules:
     };
   }
 
+  console.log(chalk.dim(`  ${actions.length} action${actions.length !== 1 ? "s" : ""} to execute`));
+
   const results = [];
   let code = "";
 
