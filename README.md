@@ -58,6 +58,13 @@ SHELL_TIMEOUT=30000
 | `openai` | `gpt-4o` | `OPENAI_API_KEY` |
 | `gemini` | `gemini-1.5-pro` | `GEMINI_API_KEY` |
 
+## Roadmap
+
+- [ ] Web UI dashboard
+- [ ] GitHub integration
+- [ ] Multi-project support (floors)
+- [ ] Voice input support
+
 ## Example
 
 ```
