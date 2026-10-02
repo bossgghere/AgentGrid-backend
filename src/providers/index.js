@@ -18,10 +18,12 @@ export async function getProvider() {
     case "gemini":
       _provider = await import("./gemini.js");
       break;
-    default:
+    default: {
+      const valid = ["anthropic", "openai", "gemini"];
       throw new Error(
-        `Unknown provider: "${PROVIDER}". Valid options: anthropic, openai, gemini`
+        `Unknown provider: "${PROVIDER}".\n  Set PROVIDER to one of: ${valid.join(", ")}\n  Check your .env file.`
       );
+    }
   }
 
   return _provider;
