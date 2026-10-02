@@ -142,6 +142,7 @@ async function main() {
       memory.sessions.push({
         task,
         status: result.status,
+        provider: PROVIDER,
         timestamp: new Date().toISOString(),
       });
       saveMemory(memory);
