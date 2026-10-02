@@ -56,6 +56,12 @@ async function main() {
 
   const rawDir = await ask(chalk.cyan("  Working directory (Enter = current): "));
   const workingDir = rawDir.trim() || process.cwd();
+
+  const fs = await import("fs");
+  if (!fs.existsSync(workingDir)) {
+    console.log(chalk.red(`  ✗ Directory not found: ${workingDir}\n`));
+    process.exit(1);
+  }
   console.log(chalk.dim(`  Dir: ${workingDir}\n`));
 
   while (true) {
