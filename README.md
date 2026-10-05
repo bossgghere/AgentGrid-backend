@@ -72,3 +72,4 @@ SHELL_TIMEOUT=30000
 ```
 
 AgentGrid will create the files, run `npm install`, and verify it works — all autonomously.
+
